@@ -34,10 +34,16 @@ const AvailableMeals = () => {
 
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsloading] = useState(true);
+  const [httpError, setHttpError] = useState();
   
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch('https://food-order-react-app-ab677-default-rtdb.europe-west1.firebasedatabase.app/meals.json');
+
+      if (!response.ok) {
+        throw new Error('Something went wrong!');
+      }
+
       const responseData = await response.json();
       const loadedMeals = [];
 
@@ -52,12 +58,25 @@ const AvailableMeals = () => {
       setMeals(loadedMeals);
       setIsloading(false);
     }
-    fetchMeals();
+   
+    fetchMeals().catch((error) => {
+       setIsloading(false);
+       setHttpError(error.message);
+    });
+                 
   }, [])
 
   if (isLoading) {
     return (
-      <p className='mealsLoader'>Content loading...</p>
+      <p className={classes.mealsLoader}>Content loading...</p>
+    )
+  }
+
+  if (httpError) {
+    return (
+      <section  >
+        <p className={classes.mealsError}>{httpError}</p>
+      </section>
     )
   }
 
