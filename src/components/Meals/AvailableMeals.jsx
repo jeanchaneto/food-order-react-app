@@ -60,8 +60,8 @@ const AvailableMeals = () => {
     }
    
     fetchMeals().catch((error) => {
-       setIsloading(false);
-       setHttpError(error.message);
+      setIsloading(false);
+      setHttpError(error.message);
     });
                  
   }, [])
